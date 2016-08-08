@@ -2,6 +2,12 @@
 
 ## Prism Downscaling MERRA-2 - Precipitation
 
+Requirements
+----------------
+- python2.7
+- xarray (http://xarray.pydata.org/en/stable/index.html)
+- climate data operators (cdo) (https://code.zmaw.de/projects/cdo)
+
 ### Preprocessing of data
 - Interplate missing values
 - Upscale Prism and remap to MERRA
