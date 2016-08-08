@@ -16,14 +16,17 @@ bc = xr.open_dataset(args['bias_corrected'])
 scaledayofyear = scale['time.dayofyear']
 
 # align indices
-scale['time'] = scale['time.dayofyear']
+scale = scale.groupby('time.dayofyear').mean('time')
+print scale
 scale['lat'] = bc.lat
 scale['lon'] = bc.lon
 
 daydata = []
 for key, val in bc.groupby('time.dayofyear'):
     # multiply interpolated by scaling factor
-    daydata += [val.bias_corrected * scale.sel(time=key)]
+    if key == 366:
+        key = 365
+    daydata += [val.bias_corrected * scale.sel(dayofyear=key)]
 
 # join all days
 bcsd = xr.concat(daydata, 'time')

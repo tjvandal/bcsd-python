@@ -5,7 +5,7 @@ import numpy as np
 import xray
 from joblib import Parallel, delayed
 
-from pydownscale.qmap import QMap
+from qmap import QMap
 
 np.seterr(invalid='ignore')
 
