@@ -8,7 +8,7 @@
 - Merge all years into single files, 1 per data source
 
 ```bash
-cd /raid/tvandal/bcsd-prism-merra/
+cd data
 prism='prism_example.nc'
 merra='merra_example.nc'
 prism_upscaled='prism_upscaled.nc'
@@ -23,27 +23,27 @@ rm tmp_filled.nc
 
 ### Bias Correction
 ```python
-python merra_prism_example.py data/$prism_upscaled data/$merra_filled ppt PRECTOTLAND data/merra_bc.nc
+python ../merra_prism_example.py $prism_upscaled $merra_filled ppt PRECTOTLAND merra_bc.nc
 ```
 
 ### Spatial Disaggregation - Scaling
 #### Remap Bias Corrected Merra to the High Resolution Prism
 ```bash
-cdo griddes data/$prism > data/prism_grid
-cdo remapbil,data/prism_grid data/merra_bc.nc data/merra_bc_interp.nc 
+cdo griddes $prism > prism_grid
+cdo remapbil,prism_grid merra_bc.nc merra_bc_interp.nc 
 ```
 #### Interpolate upscaled Prism to Original Resolution
 ```bash
-cdo remapbil,data/prism_grid data/$prism_upscaled data/prism_reinterpolated.nc
+cdo remapbil,prism_grid $prism_upscaled prism_reinterpolated.nc
 ```
 #### Compute scaling Factors
 ```bash
-cdo ydayavg data/prism_reinterpolated.nc data/prism_interpolated_ydayavg.nc
-cdo ydayavg data/$prism data/prism_ydayavg.nc
-cdo div data/prism_ydayavg.nc data/prism_interpolated_ydayavg.nc data/scale_factors.nc
+cdo ydayavg prism_reinterpolated.nc prism_interpolated_ydayavg.nc
+cdo ydayavg $prism prism_ydayavg.nc
+cdo div prism_ydayavg.nc prism_interpolated_ydayavg.nc scale_factors.nc
 ```
 
 #### Execute Spatial Scaling
 ```python
-python spatial_scaling.py data/merra_bc_interp.nc data/scale_factors.nc data/merra_bcsd.nc
+python ../spatial_scaling.py merra_bc_interp.nc scale_factors.nc merra_bcsd.nc
 ```
