@@ -8,6 +8,15 @@ Requirements
 - xarray (http://xarray.pydata.org/en/stable/index.html)
 - climate data operators (cdo) (https://code.zmaw.de/projects/cdo)
 
+### Data
+Merra 2 - A reanalysis dataset provided by NASA's Global Modeling and Assimilation 
+Office. We extract preciptation from the land product to downscale. Reanalysis datasets
+are used to test a downscaling model's skill against an observed dataset.
+https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/
+
+Prism - The prism 4km precipitation dataset is aggregated to 16km, which will be our
+observations. http://www.prism.oregonstate.edu/
+
 ### Preprocessing of data
 - Interplate missing values
 - Upscale Prism and remap to MERRA
@@ -52,4 +61,14 @@ cdo div prism_ydayavg.nc prism_interpolated_ydayavg.nc scale_factors.nc
 #### Execute Spatial Scaling
 ```python
 python ../spatial_scaling.py merra_bc_interp.nc scale_factors.nc merra_bcsd.nc
+```
+
+#### Masking (optional)
+The dataset provided does not contain any bodies of water but 
+when downscaling north america the ocean is filled with interpolated values.
+After spatial scaling we'll want to replace filled values with NaN. Here, we 
+build a dataset with 1's over land and NaN over bodies of water.
+```bash
+cdo seltimestep,1 -div -addc,1 $prism -addc,1 $prism mask.nc
+cdo mul mask.nc merra_bcsd.nc merra_bcsd_masked.nc
 ```
