@@ -16,13 +16,14 @@ bc = xr.open_dataset(args['bias_corrected'])
 scaledayofyear = scale['time.dayofyear']
 
 # align indices
+print "Grouping"
 scale = scale.groupby('time.dayofyear').mean('time')
-print scale
 scale['lat'] = bc.lat
 scale['lon'] = bc.lon
 
 daydata = []
 for key, val in bc.groupby('time.dayofyear'):
+    print key
     # multiply interpolated by scaling factor
     if key == 366:
         key = 365

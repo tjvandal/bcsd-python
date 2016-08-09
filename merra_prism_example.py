@@ -15,6 +15,8 @@ parser.add_argument("fmodeled", help="Netcdf file of a GCM or Reanalysis dataset
 parser.add_argument("var1", help="Variable name of the observed dataset")
 parser.add_argument("var2", help="Variable name of the modeled dataset")
 parser.add_argument("ofile", help="File to save bias corrected dataset")
+parser.add_argument("--njobs", help="File to save bias corrected dataset",
+                   default=1, type=int)
 args = parser.parse_args()
 args = vars(args)
 
@@ -43,6 +45,6 @@ print "starting bcsd"
 t0 = time.time()
 bc = BiasCorrectDaily(max_train_year=2001, pool=2)
 corrected = bc.bias_correction(obs_data, modeled_data, args['var1'],
-                               args['var2'])
+                               args['var2'], njobs=args['njobs'])
 print "running time:", (time.time() - t0)
 corrected.to_netcdf(args['ofile'])
