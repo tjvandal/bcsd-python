@@ -30,7 +30,11 @@ prism_upscaled='prism_upscaled.nc'
 merra_filled='merra_filled.nc'
 
 cdo griddes $merra > merra_grid
-cdo fillmiss $prism tmp_filled.nc
+# This trick of setting and resetting the missing value seems to allow fillmiss to work
+#     if resetting is not done then merra_prism_example.py won't read the file correctly
+cdo setmissval,nan $prism temp_miss.nc
+cdo fillmiss temp_miss.nc tmp.nc
+cdo setmissval,-9999 tmp.nc tmp_filled.nc
 cdo remapbil,merra_grid -gridboxmean,3,3 tmp_filled.nc $prism_upscaled
 cdo fillmiss $merra $merra_filled
 rm tmp_filled.nc
