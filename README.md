@@ -1,5 +1,9 @@
 # Bias Correction Spatial Disaggregation
 
+This code was used in this 2019 paper: [Intercomparison of machine learning methods for statistical downscaling: the case of daily and extreme precipitation
+](https://link.springer.com/article/10.1007/s00704-018-2613-3)
+
+
 ## Prism Downscaling MERRA-2 - Precipitation
 
 Requirements
